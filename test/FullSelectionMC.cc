@@ -184,7 +184,7 @@ void FullSelectionMC_Puppi(string filename, int JEC = 0, int JER = 0, bool Data 
 
   int counter = 0;
   Int_t N_entries = oldtree->GetEntriesFast();
-  //This will loop over every event in the tree.  Potentially 10^8, very slow!!!!!
+ 
   for (int i = 0; i < N_entries; i++){
     oldtree->GetEntry(i);
     float N_W = 0;
@@ -253,11 +253,9 @@ void FullSelectionMC_Puppi(string filename, int JEC = 0, int JER = 0, bool Data 
 	CSV->push_back((*jetak4PuppiCSVv2)[i]);
       }
     }
-    //Now implement the selection, requiring 2Ws to save the event (this is common to all decay channels).  Allow option for number of b-tags. Also require 30 GeV on leading ak4
+    //Now implementing the tagging.  Only saves leading 2 W and b jets. We later select on 2W and 0,1,2 b-tags  
     //First, determine if there are 2 W ak8 jets in the sample.
-    //Then, apply JEC then JER, with option to determine nominal, up, down
-    // cout << "seg fault before while loops" << endl;
-    //Then, look for 2 ak4 jets with deltaR > 0.8 from the tagged W jets. This is specific to the T'T'-> bWbW state, where they will be separated. Check b-tag numbers
+    //Then, look for 2 ak4 jets passing CSV cut.  If not enough W's or b's, take the leading resolved ak8/ak4 that is seperated from the tagged jets.
 
     if ((*ak8pt).size() > 1){
       if ((ak8pt->at(0) > 200) && (ak8pt->at(1) > 200) && ((abs((*ak8Eta)[0])) < 2.4) && ((abs((*ak8Eta)[1])) < 2.4) && (ak4pt->at(0) > 30) && (ak4pt->at(1) > 30) && ((abs((*ak4Eta)[0])) < 2.4) && ((abs((*ak4Eta)[1])) < 2.4)){
@@ -497,7 +495,6 @@ void FullSelectionMC_Puppi(string filename, int JEC = 0, int JER = 0, bool Data 
 	newTreeVars["TDeltaEta"] = abs(T1.Eta() - T2.Eta());
 	newTreeVars["TDeltaM"] = abs(2*(T1.M() - T2.M())/(T1.M() + T2.M())); //Maybe remove 2?
 
-	//	  newTreeVars["HT_2"] = _ak8Pt + _jet1ak8Pt + _jet2ak8Pt + _jet3ak8Pt;
 	//Playing with various HT definitions, need to be consistent between pre-selection definition of HT
 	HT_2 = abs(T1.Pt()) + abs(T2.Pt());
 	HT_3 = abs(b1.Pt()) +  abs(b2.Pt()) +  abs(W1.Pt()) +  abs(W2.Pt());
@@ -567,7 +564,7 @@ void FullSelectionMC_Puppi(string filename, int JEC = 0, int JER = 0, bool Data 
 	    Weight *= QCD_2000toInf_weight;
 	  }
 	}
-	newtree->Fill(); //Only want to fill if there are 2 W tags (which requires all the preselection be passed
+	newtree->Fill(); 
 	counter++;
       }
     }
