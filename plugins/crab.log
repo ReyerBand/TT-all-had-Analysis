@@ -1,0 +1,62 @@
+DEBUG 2016-06-13 10:34:21,099: 	 Executing command: 'status'
+DEBUG 2016-06-13 10:34:21,100: 	 Found CRAB cache file /uscms/home/rband/.crab3
+DEBUG 2016-06-13 10:34:21,119: 	 Checking credentials
+DEBUG 2016-06-13 10:34:21,119: 	 Found proxy file /tmp/x509up_u50753
+DEBUG 2016-06-13 10:34:21,119: 	 Getting proxy life time left
+DEBUG 2016-06-13 10:34:21,222: 	 Executing : 
+ command : voms-proxy-info -file /tmp/x509up_u50753 -timeleft
+ output : 39943
+
+ error: 
+ retcode : 0
+DEBUG 2016-06-13 10:34:21,325: 	 Executing : 
+ command : voms-proxy-info -file /tmp/x509up_u50753 -actimeleft
+ output : 39943
+
+ error: 
+ retcode : 0
+DEBUG 2016-06-13 10:34:21,326: 	 Proxy valid for 11:05:43 hours
+ERROR 2016-06-13 10:34:21,326: 	 Cannot find .requestcache file in CRAB project directory /uscms_data/d3/rband/Zprime/CMSSW_7_6_3_patch2/src/Analysis/TPrimetest/test/ttbar/crab_TprimeTprime_ttbar_background
+ERROR 2016-06-13 10:34:21,326: 	 Caught exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1606/bin/crab", line 160, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1606/bin/crab", line 146, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1606/lib/python2.7/site-packages/CRABClient/Commands/SubCommand.py", line 318, in __init__
+    self.loadLocalCache(proxyOptsSetPlace)
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1606/lib/python2.7/site-packages/CRABClient/Commands/SubCommand.py", line 447, in loadLocalCache
+    raise ex
+CachefileNotFoundException: Cannot find .requestcache file in CRAB project directory /uscms_data/d3/rband/Zprime/CMSSW_7_6_3_patch2/src/Analysis/TPrimetest/test/ttbar/crab_TprimeTprime_ttbar_background
+DEBUG 2017-02-10 07:53:04,295: 	 Executing command: 'status'
+DEBUG 2017-02-10 07:53:04,304: 	 Found CRAB cache file /uscms/home/rband/.crab3
+ERROR 2017-02-10 07:53:04,312: 	 Error: Data2016/crab_Data2016_Analysis/ is not a valid CRAB project directory.
+ERROR 2017-02-10 07:53:04,312: 	 Caught exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1702/bin/crab", line 160, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1702/bin/crab", line 146, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1702/lib/python2.7/site-packages/CRABClient/Commands/SubCommand.py", line 257, in __init__
+    self.validateOptions()
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1702/lib/python2.7/site-packages/CRABClient/Commands/status.py", line 762, in validateOptions
+    SubCommand.validateOptions(self)
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1702/lib/python2.7/site-packages/CRABClient/Commands/SubCommand.py", line 566, in validateOptions
+    raise ConfigurationException(msg)
+ConfigurationException: [91mError[0m: Data2016/crab_Data2016_Analysis/ is not a valid CRAB project directory.
+DEBUG 2017-02-10 07:53:10,475: 	 Executing command: 'status'
+DEBUG 2017-02-10 07:53:10,475: 	 Found CRAB cache file /uscms/home/rband/.crab3
+ERROR 2017-02-10 07:53:10,476: 	 Error: Data2016/crab_Data2016_Analysis/ is not a valid CRAB project directory.
+ERROR 2017-02-10 07:53:10,476: 	 Caught exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1702/bin/crab", line 160, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1702/bin/crab", line 146, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1702/lib/python2.7/site-packages/CRABClient/Commands/SubCommand.py", line 257, in __init__
+    self.validateOptions()
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1702/lib/python2.7/site-packages/CRABClient/Commands/status.py", line 762, in validateOptions
+    SubCommand.validateOptions(self)
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1702/lib/python2.7/site-packages/CRABClient/Commands/SubCommand.py", line 566, in validateOptions
+    raise ConfigurationException(msg)
+ConfigurationException: [91mError[0m: Data2016/crab_Data2016_Analysis/ is not a valid CRAB project directory.
