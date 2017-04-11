@@ -28,6 +28,8 @@ void tagging_JEC_JER_weight(TString filename, int JEC = 0, int JER = 0, bool Dat
   std::vector<float>* jetak8RawPtPuppi = 0;
   oldtree->SetBranchAddress("jetak8RawPtPuppi", &(jetak8RawPtPuppi));
   cout << "First Assign" << endl;
+  std::vector<float>* jetak8RawEPuppi = 0;
+  oldtree->SetBranchAddress("jetak8RawEPuppi", &(jetak8RawEPuppi));
   std::vector<float>* jetak8RawEtaPuppi = 0;
   oldtree->SetBranchAddress("jetak8RawEtaPuppi", &(jetak8RawEtaPuppi));
   std::vector<float>* jetak8RawPhiPuppi = 0;
@@ -222,11 +224,11 @@ void tagging_JEC_JER_weight(TString filename, int JEC = 0, int JER = 0, bool Dat
     bool pre_selection_passed = false;
     TLorentzVector W1, W2, b1, b2, b3, b4, b5, b6, T1, T2, temp1;
 
-
     std::vector<float> *ak8pt = new std::vector<float>;
     std::vector<float> *ak8Eta = new std::vector<float>;
     std::vector<float> *ak8Phi = new std::vector<float>;
     std::vector<float> *ak8Mass = new std::vector<float>;
+    std::vector<float> *ak8E = new std::vector<float>;
 
     std::vector<float> *ak4pt = new std::vector<float>;
     std::vector<float> *ak4Eta = new std::vector<float>;
@@ -244,18 +246,22 @@ void tagging_JEC_JER_weight(TString filename, int JEC = 0, int JER = 0, bool Dat
     float ak4EPuppi;
     for (int i = 0; i < (*jetak8RawPtPuppi).size(); i++){
       if ((((*ak8NHEF)[i] < 0.99) && ((*ak8NEEF)[i] < 0.99) && ((*ak8NC)[i] > 1)) && (((abs((*jetak8RawEtaPuppi)[i]) <= 2.4) && ( (*ak8CHEF)[i] > 0) && ((*ak8CM)[i] > 0) && ((*ak8CEEF)[i] < 0.99)) || (abs((*jetak8RawEtaPuppi)[i]) > 2.4)) && (abs((*jetak8RawEtaPuppi)[i]) <= 2.7)){ //Jet ID cut (loose) 
-	//Applying JEC and JER as determined in the options.  Cutting out jets shifted below 20 GeV
-	ak8PtPuppi = ((*jetak8PuppiJECSF)[i])*((*jetak8RawPtPuppi)[i]);
-	if (JEC == 1){ak8PtPuppi *= (1+(*jetak8PuppiJECUncert)[i]);}
-	if (JEC == -1){ak8PtPuppi *= (1-(*jetak8PuppiJECUncert)[i]);}
-	if (JER == 0){    ak8PtPuppi *= (*jetak8PuppiJERSF)[i];}
-	if (JER == 1){    ak8PtPuppi *= (*jetak8PuppiJERUp)[i];}
-	if (JER == -1){    ak8PtPuppi *= (*jetak8PuppiJERDown)[i];}
-	if (ak8PtPuppi >= 20){
-	  ak8pt->push_back(ak8PtPuppi);
-	  ak8Eta->push_back((*jetak8RawEtaPuppi)[i]);
-	  ak8Phi->push_back((*jetak8RawPhiPuppi)[i]);
-	  ak8Mass->push_back((*jetak8Puppisoftmass)[i]);
+	TLorentzVector v_temp;
+	v_temp.SetPtEtaPhiE((*jetak8RawPtPuppi)[i], (*jetak8RawEtaPuppi)[i], (*jetak8RawPhiPuppi)[i], (*jetak8RawEPuppi)[i]);
+	v_temp *= ((*jetak8PuppiJECSF)[i]);
+	if (JEC == 1){v_temp *= (1+(*jetak8PuppiJECUncert)[i]);}
+	if (JEC == -1){v_temp *= (1-(*jetak8PuppiJECUncert)[i]);}
+	if (!Data){
+	  if (JER == 0){    v_temp *= (*jetak8PuppiJERSF)[i];}
+	  if (JER == 1){    v_temp *= (*jetak8PuppiJERUp)[i];}
+	  if (JER == -1){    v_temp *= (*jetak8PuppiJERDown)[i];}
+	}
+	if (v_temp.Pt() >= 20){
+	  ak8pt->push_back(v_temp.Pt());
+	  ak8Eta->push_back(v_temp.Eta());
+	  ak8Phi->push_back(v_temp.Phi());
+	  ak8Mass->push_back(v_temp.M());
+	  ak8E->push_back(v_temp.E());
 	  tau21->push_back((*jetak8Puppitau21)[i]);
 	  softmass->push_back((*jetak8Puppisoftmass)[i]);
 	}
@@ -263,34 +269,22 @@ void tagging_JEC_JER_weight(TString filename, int JEC = 0, int JER = 0, bool Dat
     }
     for (int i = 0; i < (*jetak4RawPtPuppi).size(); i++){
       if ((((*ak4NHEF)[i] < 0.99) && ((*ak4NEEF)[i] < 0.99) && ((*ak4NC)[i] > 1)) && (((abs((*jetak4RawEtaPuppi)[i]) <= 2.4) && ( (*ak4CHEF)[i] > 0) && ((*ak4CM)[i] > 0) && ((*ak4CEEF)[i] < 0.99)) || (abs((*jetak4RawEtaPuppi)[i]) > 2.4)) && (abs((*jetak4RawEtaPuppi)[i]) <= 2.7)){
-	ak4PtPuppi = ((*jetak4PuppiJECSF)[i])*((*jetak4RawPtPuppi)[i]);
-        ak4EPuppi = ((*jetak4PuppiJECSF)[i])*((*jetak4RawEPuppi)[i]);
-	if (JEC == 1){
-	  ak4PtPuppi *= (1+(*jetak4PuppiJECUncert)[i]);
-          ak4EPuppi *= (1+(*jetak4PuppiJECUncert)[i]);
+	TLorentzVector v_temp;
+        v_temp.SetPtEtaPhiE((*jetak4RawPtPuppi)[i], (*jetak4RawEtaPuppi)[i], (*jetak4RawPhiPuppi)[i], (*jetak4RawEPuppi)[i]);
+        v_temp *= ((*jetak4PuppiJECSF)[i]);
+        if (JEC == 1){v_temp *= (1+(*jetak4PuppiJECUncert)[i]);}
+        if (JEC == -1){v_temp *= (1-(*jetak4PuppiJECUncert)[i]);}
+	if (!Data){
+	  if (JER == 0){    v_temp *= (*jetak4PuppiJERSF)[i];}
+	  if (JER == 1){    v_temp *= (*jetak4PuppiJERUp)[i];}
+	  if (JER == -1){    v_temp *= (*jetak4PuppiJERDown)[i];}
 	}
-	if (JEC == -1){
-	  ak4PtPuppi *= (1-(*jetak4PuppiJECUncert)[i]);
-          ak4EPuppi *= (1-(*jetak4PuppiJECUncert)[i]);
-	}
-	if (JER == 0){
-	  ak4PtPuppi *= (*jetak4PuppiJERSF)[i];
-          ak4EPuppi *= (*jetak4PuppiJERSF)[i];
-	}
-	if (JER == 1){
-	  ak4PtPuppi *= (*jetak4PuppiJERUp)[i];
-          ak4EPuppi *= (*jetak4PuppiJERUp)[i];
-	}
-	if (JER == -1){
-	  ak4PtPuppi *= (*jetak4PuppiJERDown)[i];
-          ak4EPuppi *= (*jetak4PuppiJERDown)[i];
-	}
-        if (ak4PtPuppi >= 20){
-	  ak4pt->push_back(ak4PtPuppi);
-	  ak4E->push_back(ak4EPuppi);
-	  ak4Eta->push_back((*jetak4RawEtaPuppi)[i]);
-	  ak4Phi->push_back((*jetak4RawPhiPuppi)[i]);
-	  ak4Mass->push_back((*jetak4SV0massPuppi)[i]);
+        if (v_temp.Pt() >= 20){
+          ak4pt->push_back(v_temp.Pt());
+          ak4Eta->push_back(v_temp.Eta());
+          ak4Phi->push_back(v_temp.Phi());
+          ak4Mass->push_back(v_temp.M());
+          ak4E->push_back(v_temp.E());
 	  CSV->push_back((*jetak4PuppiCSVv2)[i]);
 	}
       }
@@ -625,6 +619,7 @@ void tagging_JEC_JER_weight(TString filename, int JEC = 0, int JER = 0, bool Dat
     delete ak8Eta;
     delete ak8Phi;
     delete ak8Mass;
+    delete ak8E;
     delete ak4pt;
     delete ak4Eta;
     delete ak4Phi;
